@@ -5,7 +5,7 @@ import Blog from "./Blog.jsx";
 import Search from "./Search.jsx";
 import WordOfTheDay from "./WordOfTheDay.jsx";
 import PropTypes from 'prop-types';
-import Category from "./category.jsx";
+import Category from "./Category.jsx";
 
 
 
