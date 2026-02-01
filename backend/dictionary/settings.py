@@ -29,10 +29,13 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key-change-this")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "meaningby.onrender.com,localhost,127.0.0.1").split(",")
 
 # Add this for Render HTTPS support
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# Secure cookie settings for HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 # Application definition
@@ -154,7 +157,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173").split(",")
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:5173").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:5173,https://meaningby.onrender.com").split(",")
 
 # AUTH_USER_MODEL = "api.CustomUser"
 
