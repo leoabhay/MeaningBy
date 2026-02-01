@@ -195,8 +195,8 @@ def CreatePost(request):
             serialized.save()
             return Response(serialized.data, status=status.HTTP_201_CREATED)
         return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
-    except:
-        return HttpResponse({"message": "Failed"}, status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({"message": "Failed", "error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
@@ -205,8 +205,8 @@ def GetAllPost(request):
         post = PostModel.objects.all()
         serialized = PostSerializer(post, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
-    except:
-        return HttpResponse({"No Category Found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"message": "No Posts Found", "error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["GET"])
@@ -215,8 +215,8 @@ def GetAllPostById(request, id):
         post = get_object_or_404(PostModel, id=id)
         serialized = PostSerializer(post)
         return Response(serialized.data, status=status.HTTP_200_OK)
-    except:
-        return HttpResponse({"No Category Found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"message": "Post Not Found", "error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["PUT"])
