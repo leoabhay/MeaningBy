@@ -5,9 +5,8 @@ import { Link } from "react-router-dom";
 
 const menu = [
     { label: "Home", path: "/" },
-    // { label: "Words", path: "/word" },
     { label: "About", path: "/about" },
-    // { label: "Contact", path: "/contact" },
+    { label: "Admin", path: `${import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"}/login/` },
 ];
 
 
@@ -113,16 +112,25 @@ const Navbar = ({ base_url }) => {
                             : "hidden"
                             }`}
                     >
-                        {/* menu */}
                         {menu.map((m, index) => (
                             <li key={index} className="border-b md:border-none">
-                                <Link
-                                    to={m.path.toLowerCase().replace(/\s/g, "-")}
-                                    className="block text-decoration-none text-xl font-bold text-gray-950 hover:text-gray-900 border-b-2 border-gray-950 opacity-100 p-2 uppercase "
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    {m.label}
-                                </Link>
+                                {m.path.startsWith("http") ? (
+                                    <a
+                                        href={m.path}
+                                        className="block text-decoration-none text-xl font-bold text-gray-950 hover:text-gray-900 border-b-2 border-gray-950 opacity-100 p-2 uppercase"
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        {m.label}
+                                    </a>
+                                ) : (
+                                    <Link
+                                        to={m.path.toLowerCase().replace(/\s/g, "-")}
+                                        className="block text-decoration-none text-xl font-bold text-gray-950 hover:text-gray-900 border-b-2 border-gray-950 opacity-100 p-2 uppercase"
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        {m.label}
+                                    </Link>
+                                )}
                             </li>
                         ))}
                     </ul>

@@ -476,3 +476,62 @@ def DeleteBlog(request, id):
     blog = BlogModel.objects.get(id=id)
     blog.delete()
     return JsonResponse({"message": "Deleted Successfully"}, status.HTTP_204_NO_CONTENT)
+
+
+######################### FEATUREAPI ############################
+@api_view(["POST"])
+def CreateFeature(request):
+    try:
+        serialized = FeatureSerializer(data=request.data)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data, status=status.HTTP_201_CREATED)
+        return Response(serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return JsonResponse(
+            {"error": f"Feature creation failed: {str(e)}"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+@api_view(["GET"])
+def GetAllFeature(request):
+    try:
+        feature = FeatureModel.objects.all()
+        serialized = FeatureSerializer(feature, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    except:
+        return HttpResponse({"No Feature Found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["GET"])
+def GetAllFeatureById(request, id):
+    try:
+        feature = get_object_or_404(FeatureModel, id=id)
+        serialized = FeatureSerializer(feature)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    except:
+        return HttpResponse({f"{id} doesn't exist"}, status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["PUT"])
+def UpdateFeature(request, id):
+    try:
+        feature = get_object_or_404(FeatureModel, id=id)
+        serialized = FeatureSerializer(feature, data=request.data)
+        if serialized.is_valid():
+            serialized.save()
+            return JsonResponse(
+                {"message": "Updated Successfully", "data": serialized.data},
+                status=status.HTTP_202_ACCEPTED,
+            )
+        return JsonResponse(serialized.data, status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return HttpResponse({"Updatation Failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["DELETE"])
+def DeleteFeature(request, id):
+    feature = get_object_or_404(FeatureModel, id=id)
+    feature.delete()
+    return JsonResponse({"message": "Deleted Successfully"}, status.HTTP_204_NO_CONTENT)

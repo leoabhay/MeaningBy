@@ -26,8 +26,6 @@
     {% endif %}
 
     <div class="reg_left position-relative">
-
-
         <h1 class="position-absolute text-uppercase">Register</h1>
         {% csrf_token %}
         <form method="post" action="{% url 'auth_register' %}">

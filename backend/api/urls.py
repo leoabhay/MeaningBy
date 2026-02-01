@@ -47,4 +47,8 @@ urlpatterns = [
     path("blog/", adminBlogListApi, name="apiblog"),
     path("blog/delete/<int:id>/", adminBlogDelApi, name="deleteblog"),
     path("blog/edit/<int:id>/", adminBlogUpdateApi, name="updateblog"),
+    # Feature CRUD URL
+    path("feature/", adminFeatureListApi, name="apifeature"),
+    path("feature/delete/<int:id>/", adminFeatureDelApi, name="deletefeature"),
+    path("feature/edit/<int:id>/", adminFeatureUpdateApi, name="updatefeature"),
 ]

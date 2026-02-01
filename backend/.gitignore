@@ -1,1 +1,4 @@
 .env
+seed_data.py
+requirements_core.txt
+requirements_utf8.txt

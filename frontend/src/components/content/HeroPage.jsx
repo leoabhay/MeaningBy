@@ -1,5 +1,5 @@
 import foto from "../../assets/book1.png";
-// import Features from "./Features.jsx";
+import Features from "./Features.jsx";
 import Ads from "./Ads.jsx";
 import Blog from "./Blog.jsx";
 import Search from "./Search.jsx";
@@ -43,7 +43,7 @@ const HeroPage = ({ base_url, dictionary_url }) => {
             <div className="justify-between flex container-fluid flex-wrap">
                 <Blog base_url={base_url} />
                 <WordOfTheDay />
-                {/* <Features base_url={base_url} /> */}
+                <Features base_url={base_url} />
             </div>
             <Ads />
             <div>

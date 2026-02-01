@@ -59,4 +59,11 @@ urlpatterns = [
     path("api/blog/delete/<int:id>/", DeleteBlog, name="delete_blog"),
     path("api/blog/update/<int:id>/", UpdateBlog, name="update_blog"),
     ####################### Blog #######################
+    ####################### Feature #######################
+    path("api/feature/", CreateFeature, name="create_feature"),
+    path("api/all/feature/", GetAllFeature, name="get_allfeature"),
+    path("api/feature/<int:id>/", GetAllFeatureById, name="get_featureby_id"),
+    path("api/feature/delete/<int:id>/", DeleteFeature, name="delete_feature"),
+    path("api/feature/update/<int:id>/", UpdateFeature, name="update_feature"),
+    ####################### Feature #######################
 ]

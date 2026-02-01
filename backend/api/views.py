@@ -23,6 +23,7 @@ GET_Header = f"{baseURL}/api/all/header/"  # HeaderAPI Url
 GET_Page = f"{baseURL}/api/all/page/"  # PAGEAPI Url
 GET_Blog = f"{baseURL}/api/all/blog/"  # BLOGAPI Url
 GET_User = f"{baseURL}/api/all/user/"  # USER URL
+GET_Feature = f"{baseURL}/api/all/feature/"  # FEATURE URL
 
 
 # Admin Login
@@ -41,6 +42,7 @@ def supermain(request):
     Header = requests.get(GET_Header)
     Page = requests.get(GET_Page)
     Blog = requests.get(GET_Blog)
+    Feature = requests.get(GET_Feature)
 
     # Retrieve data from APIs
     ApiWordsList = Word.json()
@@ -50,6 +52,7 @@ def supermain(request):
     ApiHeadersList = Header.json()
     ApiPagesList = Page.json()
     ApiBlogsList = Blog.json()
+    ApiFeaturesList = Feature.json()
 
     # Staff and superuser count from Django model
     staff_count = User.objects.filter(is_staff=True).count()
@@ -64,6 +67,7 @@ def supermain(request):
         "ApiHeadersList": ApiHeadersList,
         "ApiPagesList": ApiPagesList,
         "ApiBlogsList": ApiBlogsList,
+        "ApiFeaturesList": ApiFeaturesList,
         "StaffCount": staff_count,
         "SuperuserCount": superuser_count,
     }
@@ -502,3 +506,47 @@ def adminBlogUpdateApi(request, id):
         blog_form = BlogForm(instance=blog)
 
     return render(request, "admin/blog.html", {"blogform": blog_form, "blog": blog})
+
+
+# Feature CRUD OPERATION
+def adminFeatureListApi(request):
+    response = requests.get(GET_Feature)
+    ApiFeatureList = response.json() if response.status_code == 200 else []
+    featureform = FeatureForm(request.POST, request.FILES or None)
+
+    if (
+        request.method == "POST"
+        and "feature_submit" in request.POST
+        and featureform.is_valid()
+    ):
+        featureform.save()
+        messages.success(request, "Feature added Successfully!")
+        return redirect("apifeature")
+    context = {"ApiFeatureList": ApiFeatureList, "featureform": featureform}
+
+    return render(request, "admin/feature.html", context)
+
+
+def adminFeatureDelApi(request, id):
+    feature = get_object_or_404(FeatureModel, id=id)
+    feature.delete()
+    messages.warning(request, "Deleted Successfully")
+    return redirect("apifeature")
+
+
+def adminFeatureUpdateApi(request, id):
+    feature = get_object_or_404(FeatureModel, id=id)
+    if request.method == "POST":
+        feature_form = FeatureForm(request.POST, request.FILES, instance=feature)
+        if feature_form.is_valid():
+            feature_form.save()
+            messages.success(request, "Feature Updated Sucessfully!")
+            return redirect("apifeature")
+        else:
+            messages.error(request, "Error updating feature. Please check the form.")
+    else:
+        feature_form = FeatureForm(instance=feature)
+
+    return render(
+        request, "admin/feature.html", {"featureform": feature_form, "feature": feature}
+    )

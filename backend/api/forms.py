@@ -64,3 +64,8 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = BlogModel
         fields = "__all__"
+
+class FeatureForm(forms.ModelForm):
+    class Meta:
+        model = FeatureModel
+        fields = "__all__"

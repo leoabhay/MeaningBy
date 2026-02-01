@@ -97,3 +97,8 @@ class UserSerializer(serializers.ModelSerializer):
             return "Staff"
         else:
             return "User"
+
+class FeatureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeatureModel
+        fields = ["id", "title", "description", "image"]

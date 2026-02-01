@@ -14,4 +14,4 @@ from django.contrib import admin
 #     )
 
 # Register your models here.
-admin.site.register([WordModel, PostModel, FooterModel, HeaderModel, PostCategoryModel, PageModel, BlogModel])
+admin.site.register([WordModel, PostModel, FooterModel, HeaderModel, PostCategoryModel, PageModel, BlogModel, FeatureModel])

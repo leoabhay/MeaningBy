@@ -14,24 +14,26 @@ import "./main.css";
 
 function App() {
 
-  const base_url = "http://127.0.0.1:8000"
+  const base_url = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
   const dictionary_url = "https://api.dictionaryapi.dev/api/v2/entries/en"
 
 
   return (
     <BrowserRouter>
-      <div className="container-fluid p-0" style={{
+      <div className="app-container" style={{
         backgroundColor: 'var(--main_bg)'
       }}>
         <Navbar base_url={base_url} />
-        <Routes>
-          <Route path="/" element={<HeroPage base_url={base_url} dictionary_url={dictionary_url} />} />
-          <Route path="/word/detail/:id" element={<WordsDetail dictionary_url={dictionary_url} />} />
-          <Route path="/post/:id/" element={<Cate_Details base_url={base_url} />} />
-          <Route path="/blog/:id/" element={<Blog_Details base_url={base_url} />} />
-          <Route path="/allblog" element={<AllBlogs base_url={base_url} />} />
-          <Route path="/about" element={<AboutUs />} />
-        </Routes>
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<HeroPage base_url={base_url} dictionary_url={dictionary_url} />} />
+            <Route path="/word/detail/:id" element={<WordsDetail dictionary_url={dictionary_url} />} />
+            <Route path="/post/:id/" element={<Cate_Details base_url={base_url} />} />
+            <Route path="/blog/:id/" element={<Blog_Details base_url={base_url} />} />
+            <Route path="/allblog" element={<AllBlogs base_url={base_url} />} />
+            <Route path="/about" element={<AboutUs />} />
+          </Routes>
+        </main>
         <Footer base_url={base_url} />
       </div>
     </BrowserRouter >

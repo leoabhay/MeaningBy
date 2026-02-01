@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 const Features = ({ base_url }) => {
   const [features, setFeature] = useState([]);
 
-  const path = "/api/all/post/";
+  const path = "/api/all/feature/";
   const API_url = `${base_url}${path}`;
 
   useEffect(() => {

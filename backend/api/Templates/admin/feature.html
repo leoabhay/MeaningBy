@@ -1,0 +1,159 @@
+{% extends "admin/supermain.html" %}
+{% load static %}
+{% block admin %}
+<style>
+  .descp p {
+    margin: 0;
+  }
+</style>
+
+<div class="featuremain">
+  <!-- Alert Message -->
+  {% if messages %}
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
+    {% for message in messages %}
+    <div
+      class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <!-- Alert Message -->
+</div>
+
+<!-- Feature Header -->
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+  <h1 class="text-dark" style="font-size: 4vh;">Feature Management</h1>
+  <button class="btn btn-outline-dark fw-bolder" data-bs-toggle="modal" data-bs-target="#featureFormModal" style="font-size: 2vh;">
+    Add New Feature <i class="bi bi-plus-lg fw-bolder"></i>
+  </button>
+</div>
+<!-- Feature Header -->
+
+<!-- Feature Form Modal -->
+<div class="modal fade" id="featureFormModal" tabindex="-1" aria-labelledby="featureFormLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="featureFormLabel">
+          {% if featureform.instance.id %} Update Feature {% else %} Add New Feature {% endif %}
+        </h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="{% if featureform.instance.id %}{% url 'updatefeature' featureform.instance.id %}{% else %}{% url 'apifeature' %}{% endif %}"
+          method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3">
+            {% for field in featureform %}
+            <div class="col-md-12">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+            </div>
+            {% endfor %}
+          </div>
+          <div class="d-flex justify-content-end mt-4">
+            <button type="submit" name="feature_submit" class="btn btn-success">
+              Submit <i class="bi bi-check-circle"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Feature Form Modal -->
+
+<!-- Feature Table -->
+<div class="table-responsive mt-4" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+  <table class="table table-bordered table-striped m-0">
+    <thead class="table-dark" style="height: 4rem;">
+      <tr>
+        <th class="text-center align-middle" style="width: 5%;">#</th>
+        <th class="text-center align-middle" style="width: 20%;">Title</th>
+        <th class="text-center align-middle" style="width: 35%;">Description</th>
+        <th class="text-center align-middle" style="width: 20%;">Image</th>
+        <th class="text-center align-middle" style="width: 20%;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if ApiFeatureList %}
+      {% for feature in ApiFeatureList %}
+      <tr>
+        <td class="text-center align-middle">{{ forloop.counter }}</td>
+        <td class="text-center align-middle">{{ feature.title }}</td>
+        <td class="text-center align-middle descp">{{ feature.description|safe|slice:100 }}...</td>
+        <td class="text-center align-middle">
+          {% if feature.image %}
+          <img src="{{ feature.image }}" alt="Feature Image" style="width: 50px; height: auto;" />
+          {% else %}
+          <img src="{% static 'default.png' %}" alt="No Image" class="rounded shadow-sm" style="max-width: 80px; height: 80px; object-fit: contain; border: 1px solid #ddd;" />
+          {% endif %}
+        </td>
+        <td class="text-center align-middle">
+          <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#featureFormModal{{ feature.id }}" title="Edit Feature">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <a href="{% url 'deletefeature' feature.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this feature?');" title="Delete Feature">
+            <i class="bi bi-trash"></i>
+          </a>
+        </td>
+      </tr>
+
+      <!-- Modal for Edit -->
+      <div class="modal fade" id="featureFormModal{{ feature.id }}" tabindex="-1" aria-labelledby="featureFormLabel{{ feature.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+              <h5 class="modal-title" id="featureFormLabel{{ feature.id }}">Edit Feature - {{ feature.title }}</h5>
+              <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'updatefeature' feature.id %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="id_title_{{ feature.id }}" class="form-label">Title</label>
+                    <input type="text" name="title" id="id_title_{{ feature.id }}" class="form-control" value="{{ feature.title }}" required />
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_image_{{ feature.id }}" class="form-label">Image</label>
+                    <input type="file" name="image" id="id_image_{{ feature.id }}" class="form-control" />
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_description_{{ feature.id }}" class="form-label">Description</label>
+                    <textarea name="description" id="id_description_{{ feature.id }}" class="form-control" rows="4" required>{{ feature.description }}</textarea>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                  <button type="submit" name="feature_submit" class="btn btn-success">Update <i class="bi bi-check-circle"></i></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td colspan="5" class="text-center py-3">
+          <p class="m-0 fw-bold text-muted">No Features Available</p>
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+<!-- Feature Table -->
+
+{% endblock %}

@@ -70,3 +70,11 @@ class BlogModel(models.Model):
 
     def __str__(self):
         return self.blog_title
+
+class FeatureModel(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+    image = models.ImageField(upload_to="images/", blank=True)
+
+    def __str__(self):
+        return self.title

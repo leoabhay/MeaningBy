@@ -62,31 +62,34 @@
           </p>
 
         </div>
-        <nav class="sidebar-menu d-flex flex-column gap-4 p-3">
+        <nav class="sidebar-menu d-flex flex-column gap-3 p-3">
           <a href="{% url 'apiword' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
-            <i class="bi bi-file-earmark-word"></i> WORD
+            <i class="bi bi-file-earmark-word"></i> Word
           </a>
           <a href="{% url 'apipost' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
-            <i class="bi bi-file-post"></i> POST
-          </a>
-          <a href="{% url 'apifooter' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
-            <i class="bi bi-credit-card-2-back"></i> FOOTER
-          </a>
-          <a href="{% url 'apiheader' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
-            <i class="bi bi-credit-card"></i> HEADER
+            <i class="bi bi-file-post"></i> Post
           </a>
           <a href="{% url 'apipostcat' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
-            <i class="bi bi-tag-fill"></i> Post Category
+            <i class="bi bi-tag-fill"></i> Category
           </a>
-          <a href="{% url 'apipage' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
-            <i class="bi bi-file-text"></i> Page
+          <a href="{% url 'apifeature' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
+            <i class="bi bi-star"></i> Feature
           </a>
           <a href="{% url 'apiblog' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
             <i class="bi bi-substack"></i> Blog
           </a>
-          {% if not user.is_staff %}
+          <a href="{% url 'apipage' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
+            <i class="bi bi-file-text"></i> Page
+          </a>
+          <a href="{% url 'apiheader' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
+            <i class="bi bi-credit-card"></i> Header
+          </a>
+          <a href="{% url 'apifooter' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
+            <i class="bi bi-credit-card-2-back"></i> Footer
+          </a>
+          {% if user.is_superuser %}
           <a href="{% url 'apiuser' %}" class="text-decoration-none text-dark fw-bolder" style="font-size: 2vh">
-            <i class="bi bi-person"></i> User
+            <i class="bi bi-person"></i> Users
           </a>
           {% endif %}
         </nav>
@@ -113,7 +116,7 @@
 
     <!-- Footer -->
     <footer class="bg-dark text-white text-center fw-bolder" style="width: 100%; padding: 1%; font-size: 2vh">
-      &copy; 2024 - <span id="year"></span> Admin Dashboard. All Rights Reserved.
+      &copy; <span id="year"></span> Admin Dashboard. All Rights Reserved.
     </footer>
   </main>
 

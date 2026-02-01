@@ -9,18 +9,32 @@
 }
 
 .card {
-    border-radius: 10%;
+    border-radius: 12px;
     width: 200px;
     height: 250px;
-    background-color: transparent;
-    border: 1px solid gray;
-}
-
-.card .length,
-.icon {
-    font-size: 5rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: auto;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 15px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.icon {
+    font-size: 3.5rem;
+    color: #343a40;
+    margin-bottom: 5px;
+}
+
+.card .length {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #212529;
 }
