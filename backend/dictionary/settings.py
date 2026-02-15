@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key-change-this")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "meaningby.onrender.com,localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # Add this for Render HTTPS support
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -72,7 +72,7 @@ ROOT_URLCONF = "dictionary.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "Templates"],
+        "DIRS": [BASE_DIR / "api" / "Templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -142,8 +142,10 @@ STATICFILES_DIRS = [
 
 # Media/Static files settings
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# Enable WhiteNoise's GZip compression of static assets.
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Enable WhiteNoise for static files
+# Use CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage
+# to avoid errors if some manifest files are missing during development.
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 MEDIA_ROOT = os.path.join(
     BASE_DIR, "media"
@@ -161,9 +163,11 @@ CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:5173,
 
 # AUTH_USER_MODEL = "api.CustomUser"
 
+
 LOGIN_REDIRECT_URL = "supermain"
-LOGOUT_REDIRECT_URL = "admin_login"
-LOGIN_URL = "admin_login"
+LOGOUT_REDIRECT_URL = "auth_login"
+LOGIN_URL = "auth_login"
+
 
 
 # Username  :   dictionary

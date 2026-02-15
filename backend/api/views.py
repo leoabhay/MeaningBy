@@ -7,52 +7,23 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 
 
-################################## Templates ###########################
-baseURL = "http://127.0.0.1:8000"
-GET_Word = f"{baseURL}/api/all/word/"  # WordAPI Url
-GET_Post = f"{baseURL}/api/all/post/"  # PostAPI Url
-GET_PostCate = f"{baseURL}/api/all/postcat/"  # Post_CategoryAPI Url
-GET_Footer = f"{baseURL}/api/all/footer/"  # FooterAPI Url
-GET_Header = f"{baseURL}/api/all/header/"  # HeaderAPI Url
-GET_Page = f"{baseURL}/api/all/page/"  # PAGEAPI Url
-GET_Blog = f"{baseURL}/api/all/blog/"  # BLOGAPI Url
-GET_User = f"{baseURL}/api/all/user/"  # USER URL
-GET_Feature = f"{baseURL}/api/all/feature/"  # FEATURE URL
-
-
-# Admin Login
-@login_required
-@csrf_exempt
-# def supermain(request):
-#     return render(request, "admin/supermain.html")
 
 
 def supermain(request):
-    # API calls
-    Word = requests.get(GET_Word)
-    Post = requests.get(GET_Post)
-    PostCate = requests.get(GET_PostCate)
-    Footer = requests.get(GET_Footer)
-    Header = requests.get(GET_Header)
-    Page = requests.get(GET_Page)
-    Blog = requests.get(GET_Blog)
-    Feature = requests.get(GET_Feature)
-
-    # Retrieve data from APIs
-    ApiWordsList = Word.json()
-    ApiPostsList = Post.json()
-    ApiPostCatesList = PostCate.json()
-    ApiFootersList = Footer.json()
-    ApiHeadersList = Header.json()
-    ApiPagesList = Page.json()
-    ApiBlogsList = Blog.json()
-    ApiFeaturesList = Feature.json()
+    # Direct model calls instead of internal API calls to avoid deadlocks
+    ApiWordsList = WordSerializer(WordModel.objects.all(), many=True).data
+    ApiPostsList = PostSerializer(PostModel.objects.all(), many=True).data
+    ApiPostCatesList = PostCategorySerializer(PostCategoryModel.objects.all(), many=True).data
+    ApiFootersList = FooterSerializer(FooterModel.objects.all(), many=True).data
+    ApiHeadersList = HeaderSerializer(HeaderModel.objects.all(), many=True).data
+    ApiPagesList = PageSerializer(PageModel.objects.all(), many=True).data
+    ApiBlogsList = BlogSerializer(BlogModel.objects.all(), many=True).data
+    ApiFeaturesList = FeatureSerializer(FeatureModel.objects.all(), many=True).data
 
     # Staff and superuser count from Django model
     staff_count = User.objects.filter(is_staff=True).count()
@@ -147,8 +118,7 @@ def auth_logout(request):
 
 # User CRUD Operation
 def userListApi(request):
-    response = requests.get(GET_User)
-    ApiUsersList = response.json() if response.status_code == 200 else []
+    ApiUsersList = UserSerializer(User.objects.all(), many=True).data
 
     # userform = User(request.POST or None)
     if request.method == "POST" and "user_submit" in request.POST:
@@ -201,8 +171,7 @@ def userUpdateApi(request, id):
 
 # WORD CRUD OPERATION
 def adminWordListApi(request):
-    response = requests.get(GET_Word)
-    ApiWordsList = response.json() if response.status_code == 200 else []
+    ApiWordsList = WordSerializer(WordModel.objects.all(), many=True).data
     wordform = WordForm(request.POST or None)
 
     if (
@@ -245,10 +214,8 @@ def adminWordUpdateApi(request, id):
 
 # POST CRUD OPERATION
 def adminPostListApi(request):
-    response = requests.get(GET_Post)
-    response1 = requests.get(GET_PostCate)
-    ApiPostsList = response.json() if response.status_code == 200 else []
-    ApiPostCatList = response1.json() if response1.status_code == 200 else []
+    ApiPostsList = PostSerializer(PostModel.objects.all(), many=True).data
+    ApiPostCatList = PostCategorySerializer(PostCategoryModel.objects.all(), many=True).data
     postform = PostForm(request.POST, request.FILES or None)
     # postcateform = PostCatForm(request.POST or None)
 
@@ -293,8 +260,7 @@ def adminPostUpdateApi(request, id):
 
 # POST CATEGORY OPERATION
 def adminPostCateListApi(request):
-    response = requests.get(GET_PostCate)
-    ApiPostCatList = response.json() if response.status_code == 200 else []
+    ApiPostCatList = PostCategorySerializer(PostCategoryModel.objects.all(), many=True).data
     postcateform = PostCatForm(request.POST or None)
 
     if (
@@ -336,8 +302,7 @@ def adminPostCateUpdateApi(request, id):
 
 # FOOTER CRUD OPERATION
 def adminFooterListApi(request):
-    response = requests.get(GET_Footer)
-    ApiFooterList = response.json() if response.status_code == 200 else []
+    ApiFooterList = FooterSerializer(FooterModel.objects.all(), many=True).data
     footerform = FooterForm(request.POST, request.FILES or None)
 
     if (
@@ -380,8 +345,7 @@ def adminFooterUpdateApi(request, id):
 
 # Header CRUD OPERATION
 def adminHeaderListApi(request):
-    response = requests.get(GET_Header)
-    ApiHeaderList = response.json() if response.status_code == 200 else []
+    ApiHeaderList = HeaderSerializer(HeaderModel.objects.all(), many=True).data
     headerform = HeaderForm(request.POST, request.FILES or None)
 
     if (
@@ -426,8 +390,7 @@ def adminHeaderUpdateApi(request, id):
 
 # Page CRUD OPERATION
 def adminPageListApi(request):
-    response = requests.get(GET_Page)
-    ApiPageList = response.json() if response.status_code == 200 else []
+    ApiPageList = PageSerializer(PageModel.objects.all(), many=True).data
     pageform = PageForm(request.POST or None)
 
     if (
@@ -468,8 +431,7 @@ def adminPageUpdateApi(request, id):
 
 # Blog CRUD OPERATION
 def adminBlogListApi(request):
-    response = requests.get(GET_Blog)
-    ApiBlogList = response.json() if response.status_code == 200 else []
+    ApiBlogList = BlogSerializer(BlogModel.objects.all(), many=True).data
     blogform = BlogForm(request.POST, request.FILES or None)
 
     if (
@@ -510,8 +472,7 @@ def adminBlogUpdateApi(request, id):
 
 # Feature CRUD OPERATION
 def adminFeatureListApi(request):
-    response = requests.get(GET_Feature)
-    ApiFeatureList = response.json() if response.status_code == 200 else []
+    ApiFeatureList = FeatureSerializer(FeatureModel.objects.all(), many=True).data
     featureform = FeatureForm(request.POST, request.FILES or None)
 
     if (
