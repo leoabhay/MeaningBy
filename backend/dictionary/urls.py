@@ -24,12 +24,15 @@ from api.api_views import *
 
 # schema_view = get_swagger_view(title='Jaseci API')
 
+from api.health import health_check, root_view
+
 urlpatterns = [
+    path('health/', health_check, name='health_check'),
+    path('', root_view, name='root'),
     path('admin/', admin.site.urls),
     path('', include("api.urls")),
     path('', include("api.api_url")),
-    path('', supermain, name='supermain')
-    
+    path('dashboard/', supermain, name='supermain')
 ]
 
 # Adding static and media URL patterns
