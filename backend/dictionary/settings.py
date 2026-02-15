@@ -29,7 +29,13 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key-change-this")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "meaningby.onrender.com,localhost,127.0.0.1").split(",")
+# Ensure Render domains are explicitly allowed
+if "meaningby.onrender.com" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append("meaningby.onrender.com")
+if ".onrender.com" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(".onrender.com")
+
 
 # Add this for Render HTTPS support
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
