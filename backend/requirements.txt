@@ -4,5 +4,9 @@ djangorestframework==3.15.2
 python-dotenv==1.0.1
 django-tailwind==3.8.0
 django-tinymce==4.1.0
- pillow==11.1.0
+pillow==11.1.0
 requests==2.32.3
+dj-database-url
+whitenoise
+gunicorn
+psycopg2-binary
