@@ -134,7 +134,17 @@
                   <textarea name="blog_description" id="id_blog_description_{{ blog.id }}" class="form-control" required>{{ blog.blog_description }}</textarea>
                   <label for="id_blog_author_{{ blog.id }}" class="form-label">Author</label>
                   <input type="text" name="blog_author" id="id_blog_author_{{ blog.id }}" class="form-control" value="{{ blog.blog_author }}" required />
-                </div>
+                  
+                  <!-- Category -->
+                  <label for="id_postCat_{{ blog.id }}" class="form-label">Category</label>
+                  <select name="postCat" id="id_postCat_{{ blog.id }}" class="form-control">
+                      <option value="">Select Category</option>
+                      {% for category in ApiPostCatList %}
+                      <option value="{{ category.id }}" {% if category.id == blog.blog_Cat.id %} selected {% endif %}>
+                          {{ category.cat_title }}
+                      </option>
+                      {% endfor %}
+                  </select>
                 <div class="d-flex justify-content-end mt-4">
                   <button type="submit" name="blog_submit" class="btn btn-success">Update <i class="bi bi-check-circle"></i></button>
                 </div>

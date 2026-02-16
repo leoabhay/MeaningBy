@@ -20,7 +20,7 @@ class WordSerializer(serializers.ModelSerializer):
 class PostCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PostCategoryModel
-        fields = fields = ["id", "cat_title", "cat_order"]
+        fields = ["id", "cat_title", "cat_order"]
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -28,7 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostModel
-        fields = fields = ["id", "title", "image", "full_desc", "post_Cat"]
+        fields = ["id", "title", "image", "full_desc", "post_Cat"]
 
 
 class FooterSerializer(serializers.ModelSerializer):

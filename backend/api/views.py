@@ -8,43 +8,44 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
-
-# Create your views here.
-
-
-
+from django.http import HttpResponse
 
 def supermain(request):
-    # Direct model calls instead of internal API calls to avoid deadlocks
-    ApiWordsList = WordSerializer(WordModel.objects.all(), many=True).data
-    ApiPostsList = PostSerializer(PostModel.objects.all(), many=True).data
-    ApiPostCatesList = PostCategorySerializer(PostCategoryModel.objects.all(), many=True).data
-    ApiFootersList = FooterSerializer(FooterModel.objects.all(), many=True).data
-    ApiHeadersList = HeaderSerializer(HeaderModel.objects.all(), many=True).data
-    ApiPagesList = PageSerializer(PageModel.objects.all(), many=True).data
-    ApiBlogsList = BlogSerializer(BlogModel.objects.all(), many=True).data
-    ApiFeaturesList = FeatureSerializer(FeatureModel.objects.all(), many=True).data
+    try:
+        # Direct model calls instead of internal API calls to avoid deadlocks
+        ApiWordsList = WordSerializer(WordModel.objects.all(), many=True).data
+        ApiPostsList = PostSerializer(PostModel.objects.all(), many=True).data
+        ApiPostCatesList = PostCategorySerializer(PostCategoryModel.objects.all(), many=True).data
+        ApiFootersList = FooterSerializer(FooterModel.objects.all(), many=True).data
+        ApiHeadersList = HeaderSerializer(HeaderModel.objects.all(), many=True).data
+        ApiPagesList = PageSerializer(PageModel.objects.all(), many=True).data
+        ApiBlogsList = BlogSerializer(BlogModel.objects.all(), many=True).data
+        ApiFeaturesList = FeatureSerializer(FeatureModel.objects.all(), many=True).data
 
-    # Staff and superuser count from Django model
-    staff_count = User.objects.filter(is_staff=True).count()
-    superuser_count = User.objects.filter(is_superuser=True).count()
+        # Staff and superuser count from Django model
+        staff_count = User.objects.filter(is_staff=True).count()
+        superuser_count = User.objects.filter(is_superuser=True).count()
 
-    # Prepare context
-    context = {
-        "ApiWordsList": ApiWordsList,
-        "ApiPostsList": ApiPostsList,
-        "ApiPostCatesList": ApiPostCatesList,
-        "ApiFootersList": ApiFootersList,
-        "ApiHeadersList": ApiHeadersList,
-        "ApiPagesList": ApiPagesList,
-        "ApiBlogsList": ApiBlogsList,
-        "ApiFeaturesList": ApiFeaturesList,
-        "StaffCount": staff_count,
-        "SuperuserCount": superuser_count,
-    }
+        # Prepare context
+        context = {
+            "ApiWordsList": ApiWordsList,
+            "ApiPostsList": ApiPostsList,
+            "ApiPostCatesList": ApiPostCatesList,
+            "ApiFootersList": ApiFootersList,
+            "ApiHeadersList": ApiHeadersList,
+            "ApiPagesList": ApiPagesList,
+            "ApiBlogsList": ApiBlogsList,
+            "ApiFeaturesList": ApiFeaturesList,
+            "StaffCount": staff_count,
+            "SuperuserCount": superuser_count,
+        }
 
-    # Render the template with the context
-    return render(request, "admin/dashboard.html", context)
+        # Render the template with the context
+        return render(request, "admin/dashboard.html", context)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return HttpResponse(f"Dashboard Error: {str(e)} <br> <pre>{traceback.format_exc()}</pre>", status=500)
 
 
 @csrf_exempt
@@ -112,10 +113,6 @@ def auth_logout(request):
     messages.success(request, "Logged out successfully!")
     return redirect("auth_login")
 
-
-##########################################################################################################################################################################
-
-
 # User CRUD Operation
 def userListApi(request):
     ApiUsersList = UserSerializer(User.objects.all(), many=True).data
@@ -156,10 +153,24 @@ def userUpdateApi(request, id):
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
+        status = request.POST.get("status")
+
         if username and email:
             if not User.objects.filter(username=username).exclude(id=id).exists():
                 users.username = username
                 users.email = email
+                
+                # Update Status
+                if status == "superuser":
+                    users.is_superuser = True
+                    users.is_staff = True
+                elif status == "staff":
+                    users.is_superuser = False
+                    users.is_staff = True
+                else: # user
+                    users.is_superuser = False
+                    users.is_staff = False
+                
                 users.save()
                 messages.success(request, "User updated successfully!")
                 return redirect("apiuser")
@@ -432,6 +443,7 @@ def adminPageUpdateApi(request, id):
 # Blog CRUD OPERATION
 def adminBlogListApi(request):
     ApiBlogList = BlogSerializer(BlogModel.objects.all(), many=True).data
+    ApiPostCatList = PostCategorySerializer(PostCategoryModel.objects.all(), many=True).data
     blogform = BlogForm(request.POST, request.FILES or None)
 
     if (
@@ -442,7 +454,7 @@ def adminBlogListApi(request):
         blogform.save()
         messages.success(request, "Blog added Successfully!")
         return redirect("apiblog")
-    context = {"ApiBlogList": ApiBlogList, "blogform": blogform}
+    context = {"ApiBlogList": ApiBlogList, "ApiPostCatList": ApiPostCatList, "blogform": blogform}
 
     return render(request, "admin/blog.html", context)
 
